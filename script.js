@@ -1,11 +1,13 @@
 const searchBar = document.getElementById('searchbar')
 const searchBtn = document.getElementById('searchbtn')
+const resultDiv = document.getElementById('result')
 
 searchBtn.addEventListener('click', ()=>{
     let cityName = searchBar.value
+    resultDiv.innerHTML = ""
     
     console.log(cityName);
-    GetWeather(cityName)
+    GetWeather(cityName).catch(function(){return alert("Search bar is empty")})
 })
 
 
@@ -13,38 +15,90 @@ searchBtn.addEventListener('click', ()=>{
 async function GetWeather(searchcityname){
     let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${searchcityname}&APPID=7120d90303563c0ae9477bc0bd4e6927`)
     let responseData = await response.json()
-    const resultDiv = document.getElementById('result')
-    const mainWeatherDiv = document.createElement('div')
-    const descriptionWeatherDiv = document.createElement('div')
-    const tempDiv = document.createElement('div')
-    const tempFeels_likeDiv = document.createElement('div')
-    const tempMinDiv = document.createElement('div')
-    const tempMaxDiv = document.createElement('div')
-    const pressure = document.createElement('div')
-
     
-    mainWeatherDiv.innerHTML = `${responseData.weather[0].main}`
-    resultDiv.appendChild(mainWeatherDiv)
     
-    descriptionWeatherDiv.innerHTML = `${responseData.weather[0].description}`
-    resultDiv.appendChild(descriptionWeatherDiv)
+            const mainContents = document.createElement('div')
+            mainContents.classList.add('display')
+            resultDiv.appendChild(mainContents)
 
-    tempDiv.innerHTML = `${responseData.main.temp}`      // convert
-    resultDiv.appendChild(tempDiv)
+                                                                const tempAndCity = document.createElement('div')
+                                                                mainContents.appendChild(tempAndCity)
+                                                                
+                                                                        const tempDiv = document.createElement('div')
+                                                                        tempDiv.innerHTML = `${kelvinToCelsius(responseData.main.temp)} °C`      // convert
+                                                                        tempDiv.classList.add('highlight')
+                                                                        tempAndCity.appendChild(tempDiv) 
+                                                                        
+                                                                        const cityName = document.createElement('div')
+                                                                        cityName.innerHTML = `${searchcityname}`
+                                                                        tempAndCity.appendChild(cityName)
 
-    tempFeels_likeDiv.innerHTML = `${kelvinToCelsius(responseData.main.feels_like)}`
-    resultDiv.appendChild(tempFeels_likeDiv)
+                                                                const cloudMainAndDes = document.createElement('div')
+                                                                mainContents.appendChild(cloudMainAndDes)
 
-    tempMinDiv.innerHTML = `${responseData.main.temp_min}`
-    resultDiv.appendChild(tempMinDiv)
+                                                                        const mainWeatherDiv = document.createElement('div')
+                                                                        mainWeatherDiv.innerHTML = `${responseData.weather[0].main}`
+                                                                        mainWeatherDiv.classList.add('highlight')
+                                                                        cloudMainAndDes.appendChild(mainWeatherDiv)
+                                                            
+                                                                        const descriptionWeatherDiv = document.createElement('div')
+                                                                        descriptionWeatherDiv.innerHTML = `${responseData.weather[0].description}`
+                                                                        cloudMainAndDes.appendChild(descriptionWeatherDiv)
 
-    tempMaxDiv.innerHTML = `${responseData.main.temp_max}`
-    resultDiv.appendChild(tempMaxDiv)
+            const otherDetailsDiv = document.createElement('div')
+            otherDetailsDiv.classList.add('othercontents')
+            resultDiv.appendChild(otherDetailsDiv)
+    
+                const tempFeels_likeDiv = document.createElement('div')
+                otherDetailsDiv.appendChild(tempFeels_likeDiv)
+                    
+                    const tempFeelLikeHeading = document.createElement('h3')
+                    tempFeelLikeHeading.innerHTML = "Feels Like"
+                    tempFeels_likeDiv.appendChild(tempFeelLikeHeading)
 
-    pressure.innerHTML = `${responseData.main.pressure}`
-    resultDiv.appendChild(pressure)
+                    const tempfeelsLike = document.createElement('p')
+                    tempfeelsLike.innerHTML = `${kelvinToCelsius(responseData.main.feels_like)} °C`
+                    tempFeels_likeDiv.appendChild(tempfeelsLike)
+
+
+                
+                const tempMinDiv = document.createElement('div')
+                otherDetailsDiv.appendChild(tempMinDiv)
+                        const tempMinHeading = document.createElement('h3')
+                        tempMinHeading.innerHTML = " Min Temp"
+                        tempMinDiv.appendChild(tempMinHeading)
+
+                        const tempMin = document.createElement('p')
+                        tempMin.innerHTML = `${kelvinToCelsius(responseData.main.temp_min)} °C`
+                        tempMinDiv.appendChild(tempMin)
+
+
+
+                
+                const tempMaxDiv = document.createElement('div')
+                otherDetailsDiv.appendChild(tempMaxDiv)
+                        const tempMaxHeading = document.createElement('h3')
+                        tempMaxHeading.innerHTML = "Max Temp"
+                        tempMaxDiv.appendChild(tempMaxHeading)
+
+                        const tempMax = document.createElement('p')
+                        tempMax.innerHTML = `${kelvinToCelsius(responseData.main.temp_max)} °C`
+                        tempMaxDiv.appendChild(tempMax)
+
+
+                
+                const pressureDiv = document.createElement('div')
+                otherDetailsDiv.appendChild(pressureDiv)
+                        const pressureHeading = document.createElement('h3')
+                        pressureHeading.innerHTML = "Pressure"
+                        pressureDiv.appendChild(pressureHeading)
+
+                        const pressure = document.createElement('p')
+                        pressure.innerHTML = `${responseData.main.pressure} mb`
+                        pressureDiv.appendChild(pressure)
+
+
 }
-
 
 
 function kelvinToCelsius(num) {
@@ -52,4 +106,4 @@ function kelvinToCelsius(num) {
 }
 
 
-console.log(kelvinToCelsius(297.14));
+
