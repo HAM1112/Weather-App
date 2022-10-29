@@ -52,7 +52,7 @@ body{
     justify-content: space-around;
 }
 
-#result{
+.results{
     border: 5px solid #DA0037;
     border-radius: 25px;
     margin: auto;
