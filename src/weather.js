@@ -1,33 +1,5 @@
-//import { GetWeather } from "./weather"
-
-
-
-const searchBar = document.getElementById('searchbar')
-const searchBtn = document.getElementById('searchbtn')
-const resultDiv = document.getElementById('result')
-
-searchBtn.addEventListener('click', ()=>{
-    let cityName = searchBar.value
-    resultDiv.innerHTML = ""
-    
-    console.log(cityName);
-
-    if (cityName) {
-        GetWeather(cityName).catch(function(){return alert("Oops!!! City noy found.")})
-    }
-    else{
-        alert("Search bar is empty")
-    }
-})
-
-
-function kelvinToCelsius(num) {
-    return Math.round(( num - 273.15) * 100) / 100
-}
-
-
-async function GetWeather(searchcityname){
-    let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${searchcityname}&APPID=7120d90303563c0ae9477bc0bd4e6927` , {mode : 'cors'})
+const GetWeather =async (searchcityname)=>{
+    let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${searchcityname}&APPID=7120d90303563c0ae9477bc0bd4e6927`)
     let responseData = await response.json()
 
     resultDiv.classList.add('results')
@@ -107,5 +79,8 @@ async function GetWeather(searchcityname){
     console.log("hello")
 }
 
+function super (){
 
+}
 
+export {GetWeather}
